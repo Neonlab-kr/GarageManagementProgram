@@ -9,47 +9,45 @@ public class dbConnector {
 	Connection conn; // java.sql.Connection
 	Statement stmt = null;
 
-	
 	public dbConnector() {
-		
-		// ï¿½ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ DBï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ Connection ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
-		
+
+		// »ý¼ºÀÚ°¡ ½ÇÇàµÇ¸é DB¿¡ ÀÚµ¿ ¿¬°áµÇ¾î Connection °´Ã¼ »ý¼º
+
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@58.239.89.56:1299:ORCL", "c##bus","1234"); //ï¿½ì¸® DBï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
-			System.out.println("DB ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@58.239.89.56:1299:ORCL", "c##bus", "1234");
+			System.out.println("DB ¿¬°á ¿Ï·á");
 			stmt = conn.createStatement();
 
 		} catch (ClassNotFoundException e) {
-			System.out.println("JDBC ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½");
+			System.out.println("JDBC µå¶óÀÌ¹ö ·Îµå ¿¡·¯");
 		} catch (SQLException e) {
-			System.out.println("DB ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
-			JOptionPane.showMessageDialog(null, "DB ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", "DB ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", JOptionPane.ERROR_MESSAGE);
+			System.out.println("DB ¿¬°á ¿À·ù");
+			JOptionPane.showMessageDialog(null, "DB ¿¬°á ¿À·ù", "DB ¿¬°á ¿À·ù", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	
+
 	public ResultSet executeQuery(String sql) {
-		//SQLï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½ - Parameter : Stringï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ SQLï¿½ï¿½
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ResultSetï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+		// SQL¹® ½ÇÇàÇÏ±â À§ÇÑ ¸Þ¼Òµå - Parameter : String°´Ã¼·Î ¸¸µç SQL¹®
+		// ½ÇÇà°á°ú´Â ResultSetÀ¸·Î ¹ÝÈ¯
 		System.out.println(sql);
 		ResultSet src = null;
 		try {
 			src = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 			System.out.println(src);
-			System.out.println("SQL ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
-			JOptionPane.showMessageDialog(null, "SQL ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", "SQL ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", JOptionPane.ERROR_MESSAGE);
+			System.out.println("SQL ½ÇÇà ¿¡·¯");
+			JOptionPane.showMessageDialog(null, "SQL ½ÇÇà ¿¡·¯", "SQL ½ÇÇà ¿¡·¯", JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
-		
+
 		return src;
 	}
-	
+
 	public Connection getConnection() {
-		//PreparedStatementï¿½Ì¿ï¿½ï¿½ï¿½ SQL ï¿½Û¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Connection ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+		//PreparedStatementÀÌ¿ëÇØ SQL ÀÛ¼ºÇÒ °æ¿ì Connection °´Ã¼°¡ ÇÊ¿äÇØ ¸¸µç ¸Þ¼Òµå
 		
 		if(conn!=null) {
 			return conn;
@@ -58,5 +56,4 @@ public class dbConnector {
 		}
 		
 	}
-	
 }
