@@ -16,7 +16,7 @@ public class dbConnector {
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@58.239.89.56:1299:ORCL", "univ","1234"); //�츮 DB�� ���� ���� �ʿ�
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@58.239.89.56:1299:ORCL", "c##bus","1234"); //�츮 DB�� ���� ���� �ʿ�
 			System.out.println("DB ���� �Ϸ�");
 			stmt = conn.createStatement();
 
