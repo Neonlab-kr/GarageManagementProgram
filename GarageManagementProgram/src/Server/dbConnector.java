@@ -40,6 +40,7 @@ public class dbConnector {
 		try {
 			src = stmt.executeQuery(sql);
 			rs.populate(src);
+			src.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
