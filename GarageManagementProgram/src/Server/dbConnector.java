@@ -2,7 +2,11 @@ package Server;
 
 import java.sql.*;
 
+import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
 import javax.swing.JOptionPane;
+
+import oracle.jdbc.rowset.OracleCachedRowSet;
 
 public class dbConnector {
 
@@ -27,13 +31,15 @@ public class dbConnector {
 		}
 	}
 
-	public ResultSet executeQuery(String sql) {
+	public OracleCachedRowSet executeQuery(String sql) throws SQLException {
 		// SQL문 실행하기 위한 메소드 - Parameter : String객체로 만든 SQL문
 		// 실행결과는 ResultSet으로 반환
 		System.out.println(sql);
 		ResultSet src = null;
+		OracleCachedRowSet rs = new OracleCachedRowSet();
 		try {
 			src = stmt.executeQuery(sql);
+			rs.populate(src);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
@@ -43,7 +49,7 @@ public class dbConnector {
 			return null;
 		}
 
-		return src;
+		return rs;
 	}
 
 	public Connection getConnection() {

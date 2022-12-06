@@ -1,8 +1,14 @@
 package Server;
+import javax.sql.RowSet;
 import javax.swing.*;
+
+import oracle.jdbc.rowset.OracleCachedRowSet;
+
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 class  TestClient extends JFrame implements ActionListener,Runnable
 {
@@ -81,6 +87,24 @@ class  TestClient extends JFrame implements ActionListener,Runnable
 					writer.close();
 					socket.close();
 					System.exit(0);
+				}
+				else if(dto.getCommand()==Info.TEST) {
+					OracleCachedRowSet rs = dto.getRs();
+					try {
+						while (rs.next()) {
+							System.out.println(rs.getString("버스번호"));
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} finally {
+						if (rs != null)
+							try {
+								rs.close();
+							} catch (Exception e) {
+								
+							}
+					}
 				}
 			}catch(IOException e){
 				e.printStackTrace();

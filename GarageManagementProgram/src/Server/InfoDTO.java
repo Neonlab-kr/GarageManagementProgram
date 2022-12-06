@@ -2,13 +2,17 @@ package Server;
 import java.io.*;
 import java.sql.ResultSet;
 
+import javax.sql.RowSet;
+
+import oracle.jdbc.rowset.OracleCachedRowSet;
+
 enum Info {
 	EXIT,TEST
 }
 
 public class InfoDTO implements Serializable{
 	private Info command;
-	private ResultSet rs;
+	private OracleCachedRowSet rs;
 	private String[] Argument;
 	
 	public Info getCommand() {
@@ -17,10 +21,10 @@ public class InfoDTO implements Serializable{
 	public void setCommand(Info command) {
 		this.command = command;
 	}
-	public ResultSet getRs() {
+	public OracleCachedRowSet getRs() {
 		return rs;
 	}
-	public void setRs(ResultSet rs) {
+	public void setRs(OracleCachedRowSet rs) {
 		this.rs = rs;
 	}
 	public String[] getArgument() {
