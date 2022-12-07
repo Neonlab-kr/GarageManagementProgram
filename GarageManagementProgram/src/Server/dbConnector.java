@@ -33,7 +33,7 @@ public class dbConnector {
 
 	public OracleCachedRowSet executeQuery(String sql) throws SQLException {
 		// SQL문 실행하기 위한 메소드 - Parameter : String객체로 만든 SQL문
-		// 실행결과는 ResultSet으로 반환
+		// 실행결과인 ResultSet은 CachedRowSet에 담아서 반환(직렬화 가능)
 		System.out.println(sql);
 		ResultSet src = null;
 		OracleCachedRowSet rs = new OracleCachedRowSet();
