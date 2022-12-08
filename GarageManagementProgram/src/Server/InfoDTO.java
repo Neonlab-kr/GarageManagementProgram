@@ -7,8 +7,18 @@ import javax.sql.RowSet;
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 enum Info {
-	EXIT,TEST,LOGIN,CONFIRM,JOIN,COMMIT,BUSINFO,PROFILE,USER,RECORD,SEARCH,BUSIN,BUSOUT
+	EXIT,TEST,LOGIN,CONFIRM,JOIN,BUSINFO,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT
 }
+/*LOGIN : 로그인처리
+ * CONFIRM : 가입 승인
+ * JOIN : 회원가입
+ * BUSINFO : 버스 현황 조회
+ * PROFILE : 사용자 프로필
+ * RECORD : 버스 출입차 기록
+ * SEARCH : 예상 입차 시간 조회(버스 번호)
+ * BUSIN : 입차
+ * BUSOUT : 출차
+ */
 
 public class InfoDTO implements Serializable{
 	private Info command;
