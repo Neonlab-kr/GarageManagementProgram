@@ -45,7 +45,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 				m.setNumRows(0);
 				try {
 					InfoDTO dto = new InfoDTO();
-					dto.setCommand(Info.BUSINFO);//Info.BUSINFO 버스 정보 출력 명령
+					dto.setCommand(Info.BUSSEARCH);
 					writer.writeObject(dto);
 					writer.flush();
 					String[] argument={search_tf.getText(),combo.getSelectedItem().toString()};

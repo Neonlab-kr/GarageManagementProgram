@@ -42,6 +42,8 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 					dto.setCommand(Info.CONFIRM);
 					writer.writeObject(dto);
 					writer.flush();
+					String[] argument= {ID};
+					dto.setArgument(argument);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -71,6 +73,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 			dto.setCommand(Info.USER);
 			writer.writeObject(dto);
 			writer.flush();
+			
 		}catch(IOException e){
 			e.printStackTrace();
 		}
