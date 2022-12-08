@@ -14,6 +14,7 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 {
 	private JPanel ID_panel=new JPanel();
 	private JPanel job_panel=new JPanel();
+	private JPanel company_panel=new JPanel();
 	private JPanel password_panel=new JPanel();
 	private JPanel name_panel=new JPanel();
 	private JPanel address_panel=new JPanel();
@@ -22,27 +23,34 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 	private JPanel btn_panel=new JPanel();
 	private JLabel ID_lbl=new JLabel("ID");
 	private JLabel job_lbl=new JLabel("직책");
+	private JLabel company_lbl=new JLabel("회사명");
 	private JLabel password_lbl=new JLabel("비밀번호");
 	private JLabel name_lbl=new JLabel("이름");
 	private JLabel address_lbl=new JLabel("주소");
 	private JLabel age_lbl=new JLabel("나이");
 	private JLabel tel_lbl=new JLabel("연락처");
 	private JTextField ID_tf=new JTextField(18);
-	private JTextField job_tf=new JTextField(20);
-	private JTextField password_tf=new JTextField(20);
+	private JPasswordField password_tf=new JPasswordField(20);
 	private JTextField name_tf=new JTextField(20);
 	private JTextField address_tf=new JTextField(20);
 	private JTextField age_tf=new JTextField(20);
 	private JTextField tel_tf=new JTextField(20);
+	private JRadioButton jb1=new JRadioButton("직원",true);
+	private JRadioButton jb2=new JRadioButton("관리자");
+	private ButtonGroup jbg=new ButtonGroup();
+	private JRadioButton cb1=new JRadioButton("회사 1",true);
+	private JRadioButton cb2=new JRadioButton("회사 2");
+	private JRadioButton cb3=new JRadioButton("회사 3");
+	private ButtonGroup cbg=new ButtonGroup();
 	private JButton confirm_btn=new JButton("확인");
 	private JButton join_btn=new JButton("승인 요청");
 	private JButton cancel_btn=new JButton("취소");
-	
+	Thread t;
 	private Socket socket;
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
 	
-	private boolean isConfirm=false;
+	private boolean isChecked=false;
 	
 	public Join_Frame(Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
 		this.socket=socket;
@@ -52,7 +60,8 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 		setTitle("Member Join");
 		setSize(450,300);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new GridLayout(8,1));
+		setLocationRelativeTo(null);
+		setLayout(new GridLayout(9,1));
 		
 		ID_panel.add(ID_lbl);
 		ID_panel.add(ID_tf);
@@ -60,8 +69,20 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 		add(ID_panel);
 		
 		job_panel.add(job_lbl);
-		job_panel.add(job_tf);
+		jbg.add(jb1);
+		jbg.add(jb2);
+		job_panel.add(jb1);
+		job_panel.add(jb2);
 		add(job_panel);
+		
+		company_panel.add(company_lbl);
+		cbg.add(cb1);
+		cbg.add(cb2);
+		cbg.add(cb3);
+		company_panel.add(cb1);
+		company_panel.add(cb2);
+		company_panel.add(cb3);
+		add(company_panel);
 		
 		password_panel.add(password_lbl);
 		password_panel.add(password_tf);
@@ -102,9 +123,10 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					InfoDTO dto = new InfoDTO();
-					dto.setCommand(Info.LOGIN);
+					dto.setCommand(Info.IDCHECK);
 					writer.writeObject(dto);
 					writer.flush();
+					
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -113,7 +135,7 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 		//승인 요청 버튼 ActionListener
 		join_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				if(isConfirm==false)
+				if(isChecked==false)
 				{
 					JOptionPane.showMessageDialog(null, "아이디 중복 체크 확인!","Warning",JOptionPane.ERROR_MESSAGE);
 				}
@@ -121,17 +143,25 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 				{
 					try {
 						InfoDTO dto = new InfoDTO();
-						dto.setCommand(Info.JOIN);//Info.JOIN 회원 승인 요청 명령
+						dto.setCommand(Info.JOIN);
 						writer.writeObject(dto);
 						writer.flush();
-						String[] argument=new String[]{ID_tf.getText(),job_tf.getText(),password_tf.getText(),name_tf.getText(),
+						String job="";
+						if(jb1.isSelected())job=jb1.getText();
+						else if(jb2.isSelected())job=jb2.getText();
+						String com="";
+						if(cb1.isSelected())com=cb1.getText();
+						else if(cb2.isSelected())com=cb2.getText();
+						else if(cb3.isSelected())com=cb3.getText();
+						
+						String[] argument=new String[]{ID_tf.getText(),job,com,password_tf.getText(),name_tf.getText(),
 													   address_tf.getText(),age_tf.getText(),tel_tf.getText()};
 						dto.setArgument(argument);
 						JOptionPane.showMessageDialog(null,"가입 승인 요청 완료","Message",JOptionPane.PLAIN_MESSAGE);
 					}catch(IOException ioe){
 						ioe.printStackTrace();
 					}
-					isConfirm=false;
+					isChecked=false;
 				}
 			}
 		});
@@ -140,6 +170,7 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 			public void actionPerformed(ActionEvent e){
 				new Main_Frame(socket,reader,writer).service();
 				setVisible(false);
+				t.interrupt();
 			}
 		});
 		btn_panel.add(join_btn);
@@ -151,28 +182,26 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 	
 	public void service(){
 		System.out.println("연결 완료!"); 
-		Thread t = new Thread(this);
+		t = new Thread(this);
 		t.start();
 	}
 
 	@Override
 	public void run() {
 		InfoDTO dto=null;
-		while(true) {
+		while(!Thread.interrupted()) {
 			try {
 				dto=(InfoDTO)reader.readObject();
-				if(dto.getCommand().equals(Info.LOGIN)) {
+				if(dto.getCommand().equals(Info.IDCHECK)) {
 					OracleCachedRowSet rs=dto.getRs();
 					try {
-						while(rs.next()) {
-							if(ID_lbl.getText().equals(rs.getString("아이디"))) {
-								JOptionPane.showMessageDialog(null, "아이디 중복","Warning",JOptionPane.ERROR_MESSAGE);
-								isConfirm=false;
-								break;
-							}
-							else {
-								isConfirm=true;
-							}
+						if(rs.next())
+						{
+							isChecked=true;
+						}
+						else
+						{
+							isChecked=false;
 						}
 					}catch (SQLException e) {
 						e.printStackTrace();

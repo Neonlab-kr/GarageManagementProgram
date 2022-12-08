@@ -13,15 +13,16 @@ import java.sql.SQLException;
 public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 	private JLabel ID_lbl=new JLabel("승인 대기 직원");
 	private JButton commit_btn=new JButton("아이디 승인");
-	private JButton logout_btn=new JButton("로그아웃");
+	private JButton back_btn=new JButton("뒤로가기");
 	private JComboBox ID_box=new JComboBox();
-	
+	private String ID;
 	//reader, writer 설정
 	private Socket socket;
 	private ObjectInputStream reader;
 	private ObjectOutputStream writer;
 	
-	public Admin_Frame(Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+	public Admin_Frame(String str,Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+		this.ID=str;
 		this.socket=socket;
 		this.reader=reader;
 		this.writer=writer;
@@ -30,6 +31,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		setLayout(new FlowLayout());
 		setSize(500,100);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		ID_box.setPreferredSize(new Dimension(150,20));
 		
 		//아이디 승인 버튼 ActionListener
@@ -37,7 +39,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 			public void actionPerformed(ActionEvent ae) {
 				try{		
 					InfoDTO dto = new InfoDTO();
-					dto.setCommand(Info.COMMIT);
+					dto.setCommand(Info.CONFIRM);
 					writer.writeObject(dto);
 					writer.flush();
 				}catch(IOException ioe){
@@ -47,9 +49,9 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		});
 		
 		//로그아웃 버튼 ActionListener
-		logout_btn.addActionListener(new ActionListener(){
+		back_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new Main_Frame(socket,reader,writer).service();
+				new Bus_Frame(ID,socket,reader,writer);
 				setVisible(false);
 			}
 		});
@@ -58,7 +60,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		add(ID_lbl);
 		add(ID_box);
 		add(commit_btn);
-		add(logout_btn);
+		add(back_btn);
 		setVisible(true);
 	}
 	
@@ -82,7 +84,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		try {
 			InfoDTO dto=(InfoDTO)reader.readObject();
 			while(true) {
-				if(dto.getCommand().equals(Info.COMMIT)){
+				if(dto.getCommand().equals(Info.CONFIRM)){
 					JOptionPane.showMessageDialog(null,"아이디 승인 완료","COMMIT",JOptionPane.PLAIN_MESSAGE);
 					ID_box.removeItem(ID_box.getSelectedItem());
 					break;

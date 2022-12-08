@@ -23,21 +23,21 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 	private JButton btn_quit=new JButton("종료");
 	private JTextField ID_tf=new JTextField(15);
 	private JPasswordField PW_tf=new JPasswordField(15);
-
+	
+	private Thread t;
 	//reader, writer 설정
 	private Socket socket;
 	private ObjectInputStream reader;
 	private ObjectOutputStream writer;
-	
 	//Main_Frame() 생성자
 	public Main_Frame(Socket socket,ObjectInputStream reader,ObjectOutputStream writer) {
 		this.socket=socket;
 		this.reader=reader;
 		this.writer=writer;
-		
 		//윈도우 창 설정
 		setTitle("Garage Management Program");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setLayout(new GridLayout(3,1));
 		setResizable(false);
 		setSize(450,300);
@@ -59,25 +59,17 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 		//로그인 버튼 ActionListener
 		btn_login.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				//관리자 페이지
-				if(ID_tf.getText().equals("admin")&&PW_tf.getText().equals("1234"))
-				{
-					new Admin_Frame(socket,reader,writer).service();
+				try{		
+					InfoDTO dto = new InfoDTO();
+					dto.setCommand(Info.LOGIN);
+					writer.writeObject(dto);
+					writer.flush();
+					String[]argument= {ID_tf.getText(),PW_tf.getText()};
+					dto.setArgument(argument);
+					new Bus_Frame("Sample",socket,reader,writer).service();
 					setVisible(false);
-				}
-				//일반 사용자 페이지
-				else
-				{
-					try{		
-						InfoDTO dto = new InfoDTO();
-						dto.setCommand(Info.LOGIN);
-						writer.writeObject(dto);
-						writer.flush();
-						new Bus_Frame("Sample",socket,reader,writer).service();
-						setVisible(false);
-					}catch(IOException ioe){
-						ioe.printStackTrace();
-					}
+				}catch(IOException ioe){
+					ioe.printStackTrace();
 				}
 			}
 		});
@@ -86,6 +78,7 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 			public void actionPerformed(ActionEvent ae){
 					new Join_Frame(socket,reader,writer).service();
 					setVisible(false);
+					t.interrupt();
 			}
 		});
 		//종료 버튼 ActionListener
@@ -121,14 +114,14 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 	
 	public void service(){
 		System.out.println("연결 완료!"); 	
-		Thread t = new Thread(this);
+		t = new Thread(this);
 		t.start();
 	}
 	
 	@Override
 	public void run(){
 		InfoDTO dto= null;
-		while(true){
+		while(!Thread.interrupted()){
 			try{
 				dto = (InfoDTO) reader.readObject();
 				if(dto.getCommand().equals(Info.EXIT)){
@@ -140,12 +133,10 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 				else if(dto.getCommand().equals(Info.LOGIN)){
 					OracleCachedRowSet rs=dto.getRs();
 					try{
-						while(rs.next()){
-						if(ID_lbl.getText().equals(rs.getString("아이디"))){
-							new Bus_Frame(rs.getString("아이디"),socket,reader,writer).service();
-							this.setVisible(false);
+						if(rs.next()){
+						new Bus_Frame(rs.getString("아이디"),socket,reader,writer).service();
+						this.setVisible(false);
 						}
-					}
 					}catch (SQLException e) {
 						e.printStackTrace();
 					} finally {
@@ -159,7 +150,7 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 				ioe.printStackTrace();
 			}catch(ClassNotFoundException cnfe){
 				cnfe.printStackTrace();
-			}	
+			}
 		}
 	}
 	@Override

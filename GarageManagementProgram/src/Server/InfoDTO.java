@@ -7,7 +7,7 @@ import javax.sql.RowSet;
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 enum Info {
-	EXIT,TEST,LOGIN,CONFIRM,JOIN,BUSINFO,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT
+	EXIT,TEST,LOGIN,CONFIRM,JOIN,BUSINFO,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT,USER,IDCHECK
 }
 /*LOGIN : 로그인처리
  * CONFIRM : 가입 승인
@@ -18,6 +18,10 @@ enum Info {
  * SEARCH : 예상 입차 시간 조회(버스 번호)
  * BUSIN : 입차
  * BUSOUT : 출차
+<<<<<<< HEAD
+=======
+ * IDCHECK : 아이디 중복 검사
+>>>>>>> branch 'master' of https://github.com/Neonlab-kr/GarageManagementProgram.git
  */
 
 public class InfoDTO implements Serializable{

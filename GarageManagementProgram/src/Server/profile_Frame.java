@@ -16,17 +16,18 @@ import java.sql.SQLException;
 public class profile_Frame extends JFrame implements ActionListener,Runnable
 {
 	private String ID;
-	private JLabel ID_lbl=new JLabel("아이디 : ");
-	private JLabel job_lbl=new JLabel("직책 : ");
-	private JLabel password_lbl=new JLabel("비밀번호 : ");
 	private JLabel name_lbl=new JLabel("이름 : ");
+	private JLabel job_lbl=new JLabel("직책 : ");
 	private JLabel address_lbl=new JLabel("주소 : ");
 	private JLabel age_lbl=new JLabel("나이 : ");
 	private JLabel tel_lbl=new JLabel("전화번호 : ");
-	private JLabel admit_lbl=new JLabel("승인여부 : ");
+	private JLabel admit_lbl=new JLabel("관리자 : ");
 	private JPanel btn_panel=new JPanel();
+	private JPanel btn_panel2=new JPanel();
+	private JButton confirm_btn=new JButton("가입승인");
 	private JButton back_btn=new JButton("뒤로가기");
 	
+	private boolean isManager=true;
 	private Socket socket;
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
@@ -38,9 +39,16 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 		this.writer=writer;
 		
 		setTitle(ID+"'s Profile");
-		setLayout(new GridLayout(10,1));
+		setLayout(new GridLayout(8,1));
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setSize(500,380);
+		confirm_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Admin_Frame(ID,socket,reader,writer).service();
+				setVisible(false);
+			}
+		});
 		
 		//뒤로가기 버튼 ActionListener
 		back_btn.addActionListener(new ActionListener(){
@@ -51,14 +59,14 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 		});
 		btn_panel.add(back_btn);
 		
-		add(ID_lbl);
 		add(job_lbl);
-		add(password_lbl);
 		add(name_lbl);
 		add(address_lbl);
 		add(age_lbl);
 		add(tel_lbl);
 		add(admit_lbl);
+		btn_panel2.add(confirm_btn);
+		add(btn_panel2);
 		add(btn_panel);
 		
 		setVisible(true);
@@ -89,9 +97,8 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 				if(dto.getCommand().equals(Info.PROFILE)){
 					OracleCachedRowSet rs=dto.getRs();
 					try{
-						ID_lbl.setText(ID_lbl.getText()+rs.getString("아이디"));
 						job_lbl.setText(job_lbl.getText()+rs.getString("직책"));
-						password_lbl.setText(password_lbl.getText()+rs.getString("비밀번호"));
+						if(rs.getString("직책").equals("관리자"))isManager=true;
 						name_lbl.setText(name_lbl.getText()+rs.getString("이름"));
 						address_lbl.setText(address_lbl.getText()+rs.getString("주소"));
 						age_lbl.setText(age_lbl.getText()+rs.getString("나이"));

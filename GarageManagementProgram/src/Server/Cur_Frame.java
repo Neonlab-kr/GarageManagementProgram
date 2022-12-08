@@ -3,7 +3,6 @@ package Server;
 import javax.sql.RowSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 import java.awt.event.*;
@@ -20,7 +19,8 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 	private JTable table=new JTable(model);
 	private JPanel pan=new JPanel();
 	private JComboBox combo=new JComboBox(colName);
-	private JButton sort_btn=new JButton("정렬");
+	private JTextField search_tf=new JTextField(10);
+	private JButton search_btn=new JButton("검색");
 	private JButton back_btn=new JButton("뒤로가기");
 	
 	private Socket socket;
@@ -35,13 +35,12 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 		
 		setTitle("Bus Current Situation");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setSize(550,600);
 		
 		JScrollPane scroll=new JScrollPane(table);
-		//정렬 버튼 ActionListener
-		sort_btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				//JTable 초기화
+		search_btn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
 				DefaultTableModel m=(DefaultTableModel) table.getModel();
 				m.setNumRows(0);
 				try {
@@ -49,7 +48,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 					dto.setCommand(Info.BUSINFO);//Info.BUSINFO 버스 정보 출력 명령
 					writer.writeObject(dto);
 					writer.flush();
-					String[] argument={combo.getSelectedItem().toString()};
+					String[] argument={search_tf.getText(),combo.getSelectedItem().toString()};
 					dto.setArgument(argument);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
@@ -64,7 +63,8 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 			}
 		});
 		pan.add(combo);
-		pan.add(sort_btn);
+		pan.add(search_tf);
+		pan.add(search_btn);
 		pan.add(scroll);
 		pan.add(back_btn);
 		

@@ -49,6 +49,7 @@ public class Out_Frame extends JFrame implements ActionListener,Runnable{
 		
 		setTitle("Bus Out");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		bus_box.setPreferredSize(new Dimension(150,20));
 		setSize(350,300);
 		
