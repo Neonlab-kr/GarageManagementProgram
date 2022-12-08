@@ -1,5 +1,7 @@
 package Server;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,6 +14,148 @@ public class DBcontrol {
 		dbConnector db = new dbConnector();
 		String sql = "SELECT 버스번호 FROM 버스";
 		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
 		return rs;
+	}
+
+	public OracleCachedRowSet login(String id, String pw) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT * FROM 직원 WHERE 아이디 =\'" + id + "\' AND 비밀번호 = \'" + pw + "\'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public OracleCachedRowSet confirm(String id) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT * FROM 직원 WHERE 대표자아이디 = NULL AND 회사이름 = (SELECT 회사이름 FROM 직원 WHERE 아이디 = '" + id + "');";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public void join(String id, String company, String pw, String name, String address, String age, String phone)
+			throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "INSERT INTO 직원 (아이디, 직책, 회사, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		PreparedStatement pstmt = db.conn.prepareStatement(sql);
+		pstmt.setString(1, id);
+		pstmt.setString(2, company);
+		pstmt.setString(3, pw);
+		pstmt.setString(4, name);
+		pstmt.setString(5, address);
+		pstmt.setString(6, age);
+		pstmt.setString(7, phone);
+		pstmt.executeUpdate();
+		pstmt.close();
+		db.stmt.close();
+		db.conn.close();
+	}
+
+	public OracleCachedRowSet businfo() throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "select 버스번호 from 차고";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public OracleCachedRowSet bussearch(String SearchInfo, String SearchMethod) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "select * from 버스 where " + SearchMethod + " like '%" + SearchInfo + "%'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public OracleCachedRowSet profile(String id) throws SQLException {
+		dbConnector db = new dbConnector();
+		CallableStatement cstmt = db.conn.prepareCall("begin SEARCHBYID(?); end;");
+		cstmt.setString(1, id);
+		cstmt.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
+		cstmt.execute();
+		ResultSet rstmp = (ResultSet)cstmt.getObject(2);
+		OracleCachedRowSet rs = new OracleCachedRowSet();;
+		rs.populate(rstmp);
+		cstmt.close();
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public OracleCachedRowSet record() throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "select 버스번호, 출차시간, 입차시간, 예정입차시간, 비고 from 조회,기록 where 기록.기록번호 = 조회.기록번호;";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+
+	public OracleCachedRowSet search(String busnum) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT 예정입차시간 FROM 기록,조회 WHERE 버스번호 = '" + busnum + "' and 기록.기록번호=조회.기록번호";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		return rs;
+	}
+
+	public OracleCachedRowSet busin(String busnum, String secnum, String gnum) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "UPDATE 차고 SET 버스번호 = '" + busnum + "' WHERE 차고번호 = '" + secnum + gnum + "'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		return rs;
+	}
+
+	public OracleCachedRowSet bussell(String busnum) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "DELETE FROM 버스 WHERE 버스번호 ='" + busnum + "'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		return rs;
+	}
+
+	public OracleCachedRowSet user() throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT 아이디 FROM 직원 WHERE 대표자아이디 = null";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		return rs;
+	}
+
+	public OracleCachedRowSet idcheck(String ID) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT 아이디 FROM 직원 WHERE 아이디 ='" + ID + "'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		return rs;
+	}
+
+	// preparedStatement
+	public void busbuy(String busnum, String kindnum, String yearnum, String ID) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "INSERT INTO 버스 (버스번호,종류,연식,회사) VALUES(?,?,?,?)";
+		String in_sql = "(SELECT 회사이름 FROM 직원 WHERE 아이디 = '" + ID + "')";
+		PreparedStatement pstmt = db.conn.prepareStatement(sql);
+		pstmt.setString(1, busnum);
+		pstmt.setString(2, kindnum);
+		pstmt.setString(3, yearnum);
+		pstmt.setString(4, in_sql);
+		pstmt.executeUpdate();
+	}
+
+	// callableStatement
+	public void busout(String busnum, String out_time, String pre_in_time) {
+		try {
+			dbConnector db = new dbConnector();
+			CallableStatement cstmt = db.conn.prepareCall("{call GarageExiting_Procedure(?,?,?)}");
+			cstmt.setString(1, busnum);
+			cstmt.setString(2, out_time);
+			cstmt.setString(3, pre_in_time);
+			cstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
