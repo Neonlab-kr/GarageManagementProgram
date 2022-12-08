@@ -38,6 +38,61 @@ class HandlerObject extends Thread {
 					sendDto.setCommand(Info.TEST);
 					sendDto.setRs(DBcontrol.test());
 					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.LOGIN) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.LOGIN);
+					sendDto.setRs(DBcontrol.login(dto.getArgument()[0],dto.getArgument()[1]));
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.CONFIRM) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.CONFIRM);
+					sendDto.setRs(DBcontrol.confirm(dto.getArgument()[0]));
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.JOIN) {
+					DBcontrol.join(dto.getArgument()[0],dto.getArgument()[1],dto.getArgument()[2],dto.getArgument()[3],dto.getArgument()[4],dto.getArgument()[5],dto.getArgument()[6]);
+				} else if(dto.getCommand() == Info.BUSINFO) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.BUSINFO);
+					sendDto.setRs(DBcontrol.businfo());
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.BUSSEARCH) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.BUSSEARCH);
+					sendDto.setRs(DBcontrol.bussearch(dto.getArgument()[0],dto.getArgument()[1]));
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.PROFILE) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.PROFILE);
+					sendDto.setRs(DBcontrol.profile(dto.getArgument()[0]));
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.RECORD ) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.RECORD );
+					sendDto.setRs(DBcontrol.record());
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.SEARCH ) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.SEARCH );
+					sendDto.setRs(DBcontrol.search(dto.getArgument()[0]));
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.BUSIN) {
+					DBcontrol.busin(dto.getArgument()[0],dto.getArgument()[1],dto.getArgument()[2]);
+				} else if(dto.getCommand() == Info.BUSOUT ) {
+					DBcontrol.busout(dto.getArgument()[0],dto.getArgument()[1],dto.getArgument()[2]);
+				} else if(dto.getCommand() == Info.BUSBUY ) {
+					DBcontrol.busbuy(dto.getArgument()[0],dto.getArgument()[1],dto.getArgument()[2],dto.getArgument()[3]);
+				} else if(dto.getCommand() == Info.BUSSELL  ) {
+					DBcontrol.bussell(dto.getArgument()[0]);
+				} else if(dto.getCommand() == Info.USER  ) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.USER  );
+					sendDto.setRs(DBcontrol.user());
+					writer.writeObject(sendDto);
+				} else if(dto.getCommand() == Info.IDCHECK  ) {
+					InfoDTO sendDto = new InfoDTO();
+					sendDto.setCommand(Info.IDCHECK  );
+					sendDto.setRs(DBcontrol.idcheck(dto.getArgument()[0]));
+					writer.writeObject(sendDto);
 				}
 			}
 

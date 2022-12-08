@@ -101,27 +101,33 @@ public class DBcontrol {
 		dbConnector db = new dbConnector();
 		String sql = "SELECT 예정입차시간 FROM 기록,조회 WHERE 버스번호 = '" + busnum + "' and 기록.기록번호=조회.기록번호";
 		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
 		return rs;
 	}
 
-	public OracleCachedRowSet busin(String busnum, String secnum, String gnum) throws SQLException {
+	public void busin(String busnum, String secnum, String gnum) throws SQLException {
 		dbConnector db = new dbConnector();
 		String sql = "UPDATE 차고 SET 버스번호 = '" + busnum + "' WHERE 차고번호 = '" + secnum + gnum + "'";
 		OracleCachedRowSet rs = db.executeQuery(sql);
-		return rs;
+		db.stmt.close();
+		db.conn.close();
 	}
 
-	public OracleCachedRowSet bussell(String busnum) throws SQLException {
+	public void bussell(String busnum) throws SQLException {
 		dbConnector db = new dbConnector();
 		String sql = "DELETE FROM 버스 WHERE 버스번호 ='" + busnum + "'";
 		OracleCachedRowSet rs = db.executeQuery(sql);
-		return rs;
+		db.stmt.close();
+		db.conn.close();
 	}
 
 	public OracleCachedRowSet user() throws SQLException {
 		dbConnector db = new dbConnector();
 		String sql = "SELECT 아이디 FROM 직원 WHERE 대표자아이디 = null";
 		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
 		return rs;
 	}
 
@@ -129,6 +135,8 @@ public class DBcontrol {
 		dbConnector db = new dbConnector();
 		String sql = "SELECT 아이디 FROM 직원 WHERE 아이디 ='" + ID + "'";
 		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
 		return rs;
 	}
 
@@ -143,6 +151,9 @@ public class DBcontrol {
 		pstmt.setString(3, yearnum);
 		pstmt.setString(4, in_sql);
 		pstmt.executeUpdate();
+		db.stmt.close();
+		db.conn.close();
+		pstmt.close();
 	}
 
 	// callableStatement
@@ -154,6 +165,9 @@ public class DBcontrol {
 			cstmt.setString(2, out_time);
 			cstmt.setString(3, pre_in_time);
 			cstmt.executeUpdate();
+			db.stmt.close();
+			db.conn.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
