@@ -18,10 +18,8 @@ enum Info {
  * SEARCH : 예상 입차 시간 조회(버스 번호)
  * BUSIN : 입차
  * BUSOUT : 출차
-<<<<<<< HEAD
-=======
+ * USER : 승인해야할 직원 목록
  * IDCHECK : 아이디 중복 검사
->>>>>>> branch 'master' of https://github.com/Neonlab-kr/GarageManagementProgram.git
  */
 
 public class InfoDTO implements Serializable{
