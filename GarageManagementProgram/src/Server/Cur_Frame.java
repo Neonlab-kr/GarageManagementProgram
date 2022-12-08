@@ -81,7 +81,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 			dto.setCommand(Info.BUSSEARCH);
 			writer.writeObject(dto);
 			writer.flush();
-			String[] argument=new String[]{combo.getSelectedItem().toString()};
+			String[] argument=new String[]{"",combo.getSelectedItem().toString()};
 			dto.setArgument(argument);
 		}catch(IOException e){
 			e.printStackTrace();
