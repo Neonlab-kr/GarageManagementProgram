@@ -37,6 +37,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		
 		setTitle("Bus In");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		bus_box.setPreferredSize(new Dimension(150,20));
 		setSize(350,300);
 		

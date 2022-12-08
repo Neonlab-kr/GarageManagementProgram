@@ -46,7 +46,6 @@ public class Bus_Frame extends JFrame implements ActionListener,Runnable
 	private JButton logout_btn=new JButton("로그아웃");
 	private String[] garage=new String[24];
 	private int count=0;
-	
 	private Socket socket;
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
@@ -61,6 +60,7 @@ public class Bus_Frame extends JFrame implements ActionListener,Runnable
 		setTitle("Garage Management Program");
 		setSize(650,500);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		
 		//윈도우 이벤트
@@ -76,6 +76,16 @@ public class Bus_Frame extends JFrame implements ActionListener,Runnable
 				}
 			}
 		});
+
+		bus_btn_1.setText(setString(1, garage[0]));
+		bus_btn_2.setText(setString(2, garage[1]));
+		bus_btn_3.setText(setString(3, garage[2]));
+		bus_btn_4.setText(setString(4, garage[3]));
+		bus_btn_5.setText(setString(5, garage[4]));
+		bus_btn_6.setText(setString(6, garage[5]));
+		bus_btn_7.setText(setString(7, garage[6]));
+		bus_btn_8.setText(setString(8, garage[7]));
+		
 		//프로필 버튼 ActionListener
 		profile_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)

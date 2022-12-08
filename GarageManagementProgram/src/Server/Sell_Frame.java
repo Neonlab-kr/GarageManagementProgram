@@ -39,6 +39,7 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 		
 		setTitle("Bus Sell");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setLayout(new GridLayout(3,1));
 		setSize(400,300);
 		
