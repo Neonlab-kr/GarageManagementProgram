@@ -78,7 +78,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 		
 		try{
 			InfoDTO dto = new InfoDTO();
-			dto.setCommand(Info.BUSINFO);
+			dto.setCommand(Info.BUSSEARCH);
 			writer.writeObject(dto);
 			writer.flush();
 			String[] argument=new String[]{combo.getSelectedItem().toString()};
@@ -97,7 +97,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 		while(true){
 			try{
 				dto = (InfoDTO) reader.readObject();
-				if(dto.getCommand().equals(Info.BUSINFO)){
+				if(dto.getCommand().equals(Info.BUSSEARCH)){
 					OracleCachedRowSet rs=dto.getRs();
 					try{
 						while(rs.next()){
