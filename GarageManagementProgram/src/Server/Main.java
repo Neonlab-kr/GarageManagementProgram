@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 
 public class Main{
 	public static void main(String[] args) {
-		String IPAdress="192.168.0.226";
+		String IPAdress="localhost";//TODO 입력 받는 형태로 바꿀것
 		try {
 			Socket socket=new Socket(IPAdress,9500);
 			ObjectInputStream reader= new ObjectInputStream(socket.getInputStream());
