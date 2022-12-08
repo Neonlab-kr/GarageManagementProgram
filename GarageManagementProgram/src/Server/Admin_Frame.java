@@ -68,7 +68,7 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 			System.out.println("연결 완료!");
 		try {
 			InfoDTO dto = new InfoDTO();
-			dto.setCommand(Info.USER);//Info.USER 승인요청해야하는 사용자 출력 명령
+			dto.setCommand(Info.USER);
 			writer.writeObject(dto);
 			writer.flush();
 		}catch(IOException e){

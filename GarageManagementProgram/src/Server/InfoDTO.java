@@ -7,7 +7,7 @@ import javax.sql.RowSet;
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 enum Info {
-	EXIT,TEST,LOGIN,CONFIRM,JOIN,BUSINFO,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT,USER,IDCHECK
+	EXIT,LOGIN,CONFIRM,JOIN,BUSINFO,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT,USER,IDCHECK
 }
 /*LOGIN : 로그인처리
  * CONFIRM : 가입 승인
@@ -18,6 +18,7 @@ enum Info {
  * SEARCH : 예상 입차 시간 조회(버스 번호)
  * BUSIN : 입차
  * BUSOUT : 출차
+ * USER : 승인해야할 직원 목록
  * IDCHECK : 아이디 중복 검사
  */
 

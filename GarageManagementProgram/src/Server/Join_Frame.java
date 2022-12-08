@@ -35,12 +35,16 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 	private JTextField address_tf=new JTextField(20);
 	private JTextField age_tf=new JTextField(20);
 	private JTextField tel_tf=new JTextField(20);
-	private JRadioButton jb1=new JRadioButton("직원",true);
-	private JRadioButton jb2=new JRadioButton("관리자");
+	private JRadioButton jb1=new JRadioButton("사원",true);
+	private JRadioButton jb2=new JRadioButton("주임");
+	private JRadioButton jb3=new JRadioButton("대리");
+	private JRadioButton jb4=new JRadioButton("과장");
+	private JRadioButton jb5=new JRadioButton("부장");
+	private JRadioButton jb6=new JRadioButton("사장");
 	private ButtonGroup jbg=new ButtonGroup();
-	private JRadioButton cb1=new JRadioButton("회사 1",true);
-	private JRadioButton cb2=new JRadioButton("회사 2");
-	private JRadioButton cb3=new JRadioButton("회사 3");
+	private JRadioButton cb1=new JRadioButton("삼성",true);
+	private JRadioButton cb2=new JRadioButton("유한");
+	private JRadioButton cb3=new JRadioButton("태영");
 	private ButtonGroup cbg=new ButtonGroup();
 	private JButton confirm_btn=new JButton("확인");
 	private JButton join_btn=new JButton("승인 요청");
@@ -71,8 +75,16 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 		job_panel.add(job_lbl);
 		jbg.add(jb1);
 		jbg.add(jb2);
+		jbg.add(jb3);
+		jbg.add(jb4);
+		jbg.add(jb5);
+		jbg.add(jb6);
 		job_panel.add(jb1);
 		job_panel.add(jb2);
+		job_panel.add(jb3);
+		job_panel.add(jb4);
+		job_panel.add(jb5);
+		job_panel.add(jb6);
 		add(job_panel);
 		
 		company_panel.add(company_lbl);
@@ -189,7 +201,7 @@ public class Join_Frame extends JFrame implements ActionListener,Runnable
 	@Override
 	public void run() {
 		InfoDTO dto=null;
-		while(!Thread.interrupted()) {
+		while(true) {
 			try {
 				dto=(InfoDTO)reader.readObject();
 				if(dto.getCommand().equals(Info.IDCHECK)) {

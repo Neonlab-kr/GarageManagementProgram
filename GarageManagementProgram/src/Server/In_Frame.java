@@ -21,9 +21,16 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private JComboBox bus_box=new JComboBox();
 	private JButton search_btn=new JButton("조회");
 	private JLabel pre_in_lbl=new JLabel("예상 입차 시간 : ");
+	private JRadioButton sb1=new JRadioButton("A 섹터",true);
+	private JRadioButton sb2=new JRadioButton("B 섹터");
+	private JRadioButton sb3=new JRadioButton("C 섹터");
+	private ButtonGroup sbg=new ButtonGroup();
 	private JPanel subpan2=new JPanel();
 	private JButton in_btn=new JButton("입차");
 	private JButton back_btn=new JButton("뒤로가기");
+	private JPanel subpan3=new JPanel();
+	private JComboBox sbox=new JComboBox();
+	
 	
 	private Socket socket;
 	private ObjectInputStream reader=null;
@@ -40,6 +47,10 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		setLocationRelativeTo(null);
 		bus_box.setPreferredSize(new Dimension(150,20));
 		setSize(350,300);
+		for (int i=0;i<8;i++) {
+			sbox.addItem(i+1);
+		}
+
 		
 		//조회 버튼 ActionListener
 		search_btn.addActionListener(new ActionListener() {
@@ -82,7 +93,15 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		subpan2.add(in_btn);
 		subpan2.add(back_btn);
 		pan.add(subpan1);
-		pan.add(pre_in_lbl);
+		sbg.add(sb1);
+		sbg.add(sb2);
+		sbg.add(sb3);
+		subpan3.add(sb1);
+		subpan3.add(sb2);
+		subpan3.add(sb3);
+		subpan3.add(sbox);
+		subpan3.add(pre_in_lbl);
+		pan.add(subpan3);
 		pan.add(subpan2);
 		add(pan);
 		setVisible(true);

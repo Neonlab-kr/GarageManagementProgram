@@ -59,7 +59,7 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 		//로그인 버튼 ActionListener
 		btn_login.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				try{		
+				try{
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.LOGIN);
 					writer.writeObject(dto);
@@ -84,12 +84,21 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 		//종료 버튼 ActionListener
 		btn_quit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				try{		
+				try {
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.EXIT);//Info.EXIT 종료 명령
 					writer.writeObject(dto);
 					writer.flush();
-				}catch(Exception e){System.exit(0);}
+					t.interrupt();
+					t.sleep(100);
+					reader.close();
+					writer.close();
+					socket.close();
+					System.exit(0);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+				}
 			}
 		});
 
@@ -121,10 +130,11 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 	@Override
 	public void run(){
 		InfoDTO dto= null;
-		while(!Thread.interrupted()){
+		while(true){
 			try{
 				dto = (InfoDTO) reader.readObject();
 				if(dto.getCommand().equals(Info.EXIT)){
+					t.interrupt();
 					reader.close();
 					writer.close();
 					socket.close();
