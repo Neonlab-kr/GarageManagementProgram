@@ -32,11 +32,12 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
 	
-	public profile_Frame(String str, Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+	public profile_Frame(String str) throws UnknownHostException, IOException{
 		this.ID=str;
-		this.socket=socket;
-		this.reader=reader;
-		this.writer=writer;
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 		
 		setTitle(ID+"'s Profile");
 		setLayout(new GridLayout(8,1));
@@ -45,7 +46,15 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 		setSize(500,380);
 		confirm_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Admin_Frame(ID,socket,reader,writer).service();
+				try {
+					new Admin_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
@@ -53,7 +62,15 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 		//뒤로가기 버튼 ActionListener
 		back_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new Bus_Frame(ID,socket,reader,writer).service();
+				try {
+					new Bus_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
@@ -77,10 +94,10 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 		try{
 			InfoDTO dto = new InfoDTO();
 			dto.setCommand(Info.PROFILE);
-			writer.writeObject(dto);
-			writer.flush();
 			String[] argument= {ID};
 			dto.setArgument(argument);
+			writer.writeObject(dto);
+			writer.flush();
 		}catch(IOException e){
 			e.printStackTrace();
 		}

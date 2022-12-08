@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 
 import javax.swing.*;
@@ -29,11 +30,12 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
 	
-	public Buy_Frame(String str, Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+	public Buy_Frame(String str) throws UnknownHostException, IOException{
 		this.ID=str;
-		this.socket=socket;
-		this.reader=reader;
-		this.writer=writer;
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 		
 		setTitle("Bus Buy");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -45,10 +47,10 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 				try{
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.BUSIN);
-					writer.writeObject(dto);
-					writer.flush();
 					String[]argument=new String[] {bus_tf.getText(),kind_tf.getText(),year_tf.getText()};
 					dto.setArgument(argument);		
+					writer.writeObject(dto);
+					writer.flush();
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}catch(NullPointerException npe) {
@@ -59,7 +61,15 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 		
 		back_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new Bus_Frame(ID,socket,reader,writer).service();
+				try {
+					new Bus_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});

@@ -9,21 +9,6 @@ import oracle.jdbc.rowset.OracleCachedRowSet;
 enum Info {
 	EXIT,TEST,LOGIN,CONFIRM,JOIN,BUSINFO,BUSSEARCH,PROFILE,RECORD,SEARCH,BUSIN,BUSOUT,BUSBUY,BUSSELL,USER,IDCHECK
 }
-/*LOGIN : 로그인처리
- * CONFIRM : 가입 승인
- * JOIN : 회원가입
- * BUSINFO : 버스 현황 조회
- * BUSSEARCH : 버스 검색
- * PROFILE : 사용자 프로필
- * RECORD : 버스 출입차 기록
- * SEARCH : 예상 입차 시간 조회(버스 번호)
- * BUSIN : 입차
- * BUSOUT : 출차
- * BUSBUY : 매입
- * BUSSELL : 매도
- * USER : 승인해야할 직원 목록
- * IDCHECK : 아이디 중복 검사
- */
 
 public class InfoDTO implements Serializable{
 	private Info command;

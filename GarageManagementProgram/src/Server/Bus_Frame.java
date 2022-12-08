@@ -49,11 +49,12 @@ public class Bus_Frame extends JFrame implements ActionListener, Runnable {
 	private ObjectInputStream reader = null;
 	private ObjectOutputStream writer = null;
 
-	public Bus_Frame(String str, Socket socket, ObjectInputStream reader, ObjectOutputStream writer) {
+	public Bus_Frame(String str) throws UnknownHostException, IOException {
 		this.ID = str;
-		this.socket = socket;
-		this.reader = reader;
-		this.writer = writer;
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 
 		setTitle("Garage Management Program");
 		setSize(650, 500);
@@ -87,42 +88,90 @@ public class Bus_Frame extends JFrame implements ActionListener, Runnable {
 		// 프로필 버튼 ActionListener
 		profile_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new profile_Frame(ID, socket, reader, writer).service();
+				try {
+					new profile_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
 		// 현황 조회 버튼 ActionListener
 		cur_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Cur_Frame(ID, socket, reader, writer).service();
+				try {
+					new Cur_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
 		// 차량 입차 버튼 ActionListener
 		in_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new In_Frame(ID, socket, reader, writer).service();
+				try {
+					new In_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
 		// 차량 출차 버튼 ActionListener
 		out_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Out_Frame(ID, socket, reader, writer).service();
+				try {
+					new Out_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
 		// 차량 매입 버튼 ActionListener
 		buy_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Buy_Frame(ID, socket, reader, writer).service();
+				try {
+					new Buy_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
 		// 차량 매도 버튼 ActionListener
 		sell_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Sell_Frame(ID, socket, reader, writer).service();
+				try {
+					new Sell_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
@@ -170,7 +219,15 @@ public class Bus_Frame extends JFrame implements ActionListener, Runnable {
 		});
 		logout_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Main_Frame(socket, reader, writer).service();
+				try {
+					new Main_Frame().service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});

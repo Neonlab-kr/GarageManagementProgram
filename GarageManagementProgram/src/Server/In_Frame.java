@@ -20,7 +20,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private JLabel bus_lbl=new JLabel("버스 번호");
 	private JComboBox bus_box=new JComboBox();
 	private JButton search_btn=new JButton("조회");
-	private JLabel pre_in_lbl=new JLabel("예상 입차 시간 : ");
+	private JLabel pre_in_lbl=new JLabel("예정 입차 시간 : ");
 	private JRadioButton sb1=new JRadioButton("A 섹터",true);
 	private JRadioButton sb2=new JRadioButton("B 섹터");
 	private JRadioButton sb3=new JRadioButton("C 섹터");
@@ -36,11 +36,12 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
 	
-	public In_Frame(String str, Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+	public In_Frame(String str) throws UnknownHostException, IOException{
 		this.ID=str;
-		this.socket=socket;
-		this.reader=reader;
-		this.writer=writer;
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 		
 		setTitle("Bus In");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,10 +59,10 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 				try{
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.SEARCH);
-					writer.writeObject(dto);
-					writer.flush();
 					String[] argument= {bus_box.getSelectedItem().toString()};
 					dto.setArgument(argument);
+					writer.writeObject(dto);
+					writer.flush();	
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -83,7 +84,15 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		//뒤로가기 버튼 ActionListener
 		back_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-				new Bus_Frame(ID,socket,reader,writer).service();
+				try {
+					new Bus_Frame(ID).service();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
@@ -131,7 +140,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 					OracleCachedRowSet rs=dto.getRs();
 					try {
 						while(rs.next()) {
-							if(!rs.getString("예상입차시간").equals(null))
+							if(rs.getString("예정입차시간")!=null)
 							{
 								bus_box.addItem(rs.getString("버스번호"));
 							}
@@ -146,10 +155,11 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 					}
 				}
 				else if(dto.getCommand().equals(Info.SEARCH)) {
-					OracleCachedRowSet rs=dto.getRs();
+					OracleCachedRowSet rs=dto.getRs();	
 					try {
+						rs.next();
 						pre_in_lbl.setText(bus_box.getSelectedItem().toString()+" "
-										  +pre_in_lbl.getText()+rs.getString("예상입차시간"));
+										  +pre_in_lbl.getText()+rs.getString("예정입차시간"));
 					}catch (SQLException e) {
 						e.printStackTrace();
 					} finally {

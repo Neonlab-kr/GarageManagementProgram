@@ -37,18 +37,19 @@ public class DBcontrol {
 		return rs;
 	}
 
-	public void join(String id, String company, String pw, String name, String address, String age, String phone)
+	public void join(String id,String job, String company, String pw, String name, String address, String age, String phone)
 			throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "INSERT INTO 직원 (아이디, 직책, 회사, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO 직원 (아이디, 직책, 회사, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = db.conn.prepareStatement(sql);
 		pstmt.setString(1, id);
-		pstmt.setString(2, company);
-		pstmt.setString(3, pw);
-		pstmt.setString(4, name);
-		pstmt.setString(5, address);
-		pstmt.setString(6, age);
-		pstmt.setString(7, phone);
+		pstmt.setString(2, job);
+		pstmt.setString(3, company);
+		pstmt.setString(4, pw);
+		pstmt.setString(5, name);
+		pstmt.setString(6, address);
+		pstmt.setString(7, age);
+		pstmt.setString(8, phone);
 		pstmt.executeUpdate();
 		pstmt.close();
 		db.stmt.close();
@@ -90,7 +91,7 @@ public class DBcontrol {
 
 	public OracleCachedRowSet record() throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "select 버스번호, 출차시간, 입차시간, 예정입차시간, 비고 from 조회,기록 where 기록.기록번호 = 조회.기록번호;";
+		String sql = "select 버스번호, 출차시간, 입차시간, 예정입차시간, 비고 from 조회,기록 where 기록.기록번호 = 조회.기록번호";
 		OracleCachedRowSet rs = db.executeQuery(sql);
 		db.stmt.close();
 		db.conn.close();

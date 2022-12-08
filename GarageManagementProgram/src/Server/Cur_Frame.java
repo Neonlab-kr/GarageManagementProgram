@@ -14,7 +14,7 @@ import java.sql.SQLException;
 public class Cur_Frame extends JFrame implements ActionListener,Runnable
 {
 	private String ID;
-	private String colName[]={"버스 번호","종류","연식","회사 이름"};
+	private String colName[]={"버스번호","종류","연식","회사이름"};
 	private DefaultTableModel model=new DefaultTableModel(colName,0);
 	private JTable table=new JTable(model);
 	private JPanel pan=new JPanel();
@@ -27,11 +27,12 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
 	
-	public Cur_Frame(String str, Socket socket,ObjectInputStream reader,ObjectOutputStream writer){
+	public Cur_Frame(String str) throws UnknownHostException, IOException{
 		this.ID=str;
-		this.socket=socket;
-		this.reader=reader;
-		this.writer=writer;
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 		
 		setTitle("Bus Current Situation");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -46,10 +47,10 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 				try {
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.BUSSEARCH);
-					writer.writeObject(dto);
-					writer.flush();
 					String[] argument={search_tf.getText(),combo.getSelectedItem().toString()};
 					dto.setArgument(argument);
+					writer.writeObject(dto);
+					writer.flush();
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -58,7 +59,15 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 		//뒤로가기 버튼 ActionListener
 		back_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				new Bus_Frame(ID,socket,reader,writer).service();
+				try {
+					new Bus_Frame(ID).service();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				setVisible(false);
 			}
 		});
@@ -79,10 +88,10 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 		try{
 			InfoDTO dto = new InfoDTO();
 			dto.setCommand(Info.BUSSEARCH);
-			writer.writeObject(dto);
-			writer.flush();
 			String[] argument=new String[]{"",combo.getSelectedItem().toString()};
 			dto.setArgument(argument);
+			writer.writeObject(dto);
+			writer.flush();
 		}catch(IOException e){
 			e.printStackTrace();
 		}
@@ -102,7 +111,7 @@ public class Cur_Frame extends JFrame implements ActionListener,Runnable
 					try{
 						while(rs.next()){
 							String[] row=new String[]{rs.getString("버스번호"),rs.getString("종류"),
-													  rs.getString("연식"),rs.getString("회사")};
+													  rs.getString("연식"),rs.getString("회사이름")};
 							model.addRow(row);
 						}
 					}catch (SQLException e) {

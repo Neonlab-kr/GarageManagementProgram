@@ -24,16 +24,19 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 	private JTextField ID_tf=new JTextField(15);
 	private JPasswordField PW_tf=new JPasswordField(15);
 	
+	private boolean flag = true;
+	
 	private Thread t;
 	//reader, writer 설정
 	private Socket socket;
 	private ObjectInputStream reader;
 	private ObjectOutputStream writer;
 	//Main_Frame() 생성자
-	public Main_Frame(Socket socket,ObjectInputStream reader,ObjectOutputStream writer) {
-		this.socket=socket;
-		this.reader=reader;
-		this.writer=writer;
+	public Main_Frame() throws UnknownHostException, IOException {
+		socket = new Socket("localhost",9500);
+		//에러 발생
+		reader= new ObjectInputStream(socket.getInputStream());
+		writer = new ObjectOutputStream(socket.getOutputStream());
 		//윈도우 창 설정
 		setTitle("Garage Management Program");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -62,11 +65,11 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 				try{
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.LOGIN);
-					writer.writeObject(dto);
-					writer.flush();
 					String[]argument= {ID_tf.getText(),PW_tf.getText()};
 					dto.setArgument(argument);
-					new Bus_Frame("Sample",socket,reader,writer).service();
+					writer.writeObject(dto);
+					writer.flush();
+					new Bus_Frame("Sample").service();
 					setVisible(false);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
@@ -76,9 +79,18 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 		//회원가입 버튼 ActionListener
 		join_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
-					new Join_Frame(socket,reader,writer).service();
+					try {
+						new Join_Frame().service();
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					setVisible(false);
 					t.interrupt();
+					flag=false;
 			}
 		});
 		//종료 버튼 ActionListener
@@ -130,7 +142,7 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 	@Override
 	public void run(){
 		InfoDTO dto= null;
-		while(true){
+		while(flag){
 			try{
 				dto = (InfoDTO) reader.readObject();
 				if(dto.getCommand().equals(Info.EXIT)){
@@ -144,7 +156,7 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 					OracleCachedRowSet rs=dto.getRs();
 					try{
 						if(rs.next()){
-						new Bus_Frame(rs.getString("아이디"),socket,reader,writer).service();
+						new Bus_Frame(rs.getString("아이디")).service();
 						this.setVisible(false);
 						}
 					}catch (SQLException e) {
