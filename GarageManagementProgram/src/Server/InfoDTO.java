@@ -7,7 +7,7 @@ import javax.sql.RowSet;
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 enum Info {
-	EXIT,TEST
+	EXIT,TEST,LOGIN,CONFIRM,JOIN,COMMIT,BUSINFO,PROFILE,USER,RECORD,SEARCH,BUSIN,BUSOUT
 }
 
 public class InfoDTO implements Serializable{
