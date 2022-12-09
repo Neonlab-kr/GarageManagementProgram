@@ -79,7 +79,6 @@ public class DBcontrol {
 		cstmt.execute();
 		ResultSet rstmp = (ResultSet) cstmt.getObject(2);
 		OracleCachedRowSet rs = new OracleCachedRowSet();
-		;
 		rs.populate(rstmp);
 		cstmt.close();
 		db.stmt.close();
