@@ -114,13 +114,14 @@ public class profile_Frame extends JFrame implements ActionListener,Runnable
 				if(dto.getCommand().equals(Info.PROFILE)){
 					OracleCachedRowSet rs=dto.getRs();
 					try{
+						rs.next();
 						job_lbl.setText(job_lbl.getText()+rs.getString("직책"));
 						if(rs.getString("직책").equals("관리자"))isManager=true;
 						name_lbl.setText(name_lbl.getText()+rs.getString("이름"));
 						address_lbl.setText(address_lbl.getText()+rs.getString("주소"));
 						age_lbl.setText(age_lbl.getText()+rs.getString("나이"));
 						tel_lbl.setText(tel_lbl.getText()+rs.getString("전화번호"));
-						admit_lbl.setText(admit_lbl.getText()+rs.getString("승인여부"));
+						admit_lbl.setText(admit_lbl.getText()+rs.getString("대표자아이디"));
 					}catch (SQLException e) {
 						e.printStackTrace();
 					} finally {

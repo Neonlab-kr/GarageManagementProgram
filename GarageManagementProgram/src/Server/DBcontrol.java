@@ -73,7 +73,7 @@ public class DBcontrol {
 
 	public OracleCachedRowSet profile(String id) throws SQLException {
 		dbConnector db = new dbConnector();
-		CallableStatement cstmt = db.conn.prepareCall("begin SEARCHBYID(?); end;");
+		CallableStatement cstmt = db.conn.prepareCall("begin SEARCHBYID(?,?); end;");
 		cstmt.setString(1, id);
 		cstmt.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
 		cstmt.execute();
