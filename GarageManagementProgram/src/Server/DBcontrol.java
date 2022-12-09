@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.sql.RowSet;
-
 import oracle.jdbc.rowset.OracleCachedRowSet;
 
 public class DBcontrol {
@@ -28,17 +26,16 @@ public class DBcontrol {
 		return rs;
 	}
 
-	public OracleCachedRowSet confirm(String id) throws SQLException {
+	public void confirm(String id, String conid) throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "SELECT * FROM 직원 WHERE 대표자아이디 = NULL AND 회사이름 = (SELECT 회사이름 FROM 직원 WHERE 아이디 = '" + id + "');";
-		OracleCachedRowSet rs = db.executeQuery(sql);
+		String sql = "update 직원 set 대표자아이디 = '" + id + "' where 아이디 = '" + conid + "'";
+		db.stmt.executeQuery(sql);
 		db.stmt.close();
 		db.conn.close();
-		return rs;
 	}
 
-	public void join(String id,String job, String company, String pw, String name, String address, String age, String phone)
-			throws SQLException {
+	public void join(String id, String job, String company, String pw, String name, String address, String age,
+			String phone) throws SQLException {
 		dbConnector db = new dbConnector();
 		String sql = "INSERT INTO 직원 (아이디, 직책, 회사, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = db.conn.prepareStatement(sql);
@@ -80,8 +77,9 @@ public class DBcontrol {
 		cstmt.setString(1, id);
 		cstmt.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
 		cstmt.execute();
-		ResultSet rstmp = (ResultSet)cstmt.getObject(2);
-		OracleCachedRowSet rs = new OracleCachedRowSet();;
+		ResultSet rstmp = (ResultSet) cstmt.getObject(2);
+		OracleCachedRowSet rs = new OracleCachedRowSet();
+		;
 		rs.populate(rstmp);
 		cstmt.close();
 		db.stmt.close();
@@ -123,9 +121,9 @@ public class DBcontrol {
 		db.conn.close();
 	}
 
-	public OracleCachedRowSet user() throws SQLException {
+	public OracleCachedRowSet user(String id) throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "SELECT 아이디 FROM 직원 WHERE 대표자아이디 = null";
+		String sql = "SELECT * FROM 직원 WHERE 대표자아이디 is NULL AND 회사이름 = (SELECT 회사이름 FROM 직원 WHERE 아이디 = '" + id + "')";
 		OracleCachedRowSet rs = db.executeQuery(sql);
 		db.stmt.close();
 		db.conn.close();

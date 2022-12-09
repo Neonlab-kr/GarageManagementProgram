@@ -44,10 +44,7 @@ class HandlerObject extends Thread {
 					sendDto.setRs(DBcontrol.login(dto.getArgument()[0],dto.getArgument()[1]));
 					writer.writeObject(sendDto);
 				} else if(dto.getCommand() == Info.CONFIRM) {
-					InfoDTO sendDto = new InfoDTO();
-					sendDto.setCommand(Info.CONFIRM);
-					sendDto.setRs(DBcontrol.confirm(dto.getArgument()[0]));
-					writer.writeObject(sendDto);
+					DBcontrol.confirm(dto.getArgument()[0],dto.getArgument()[1]);
 				} else if(dto.getCommand() == Info.JOIN) {
 					DBcontrol.join(dto.getArgument()[0],dto.getArgument()[1],dto.getArgument()[2],dto.getArgument()[3],dto.getArgument()[4],dto.getArgument()[5],dto.getArgument()[6],dto.getArgument()[7]);
 				} else if(dto.getCommand() == Info.BUSINFO) {
@@ -86,7 +83,7 @@ class HandlerObject extends Thread {
 				} else if(dto.getCommand() == Info.USER  ) {
 					InfoDTO sendDto = new InfoDTO();
 					sendDto.setCommand(Info.USER  );
-					sendDto.setRs(DBcontrol.user());
+					sendDto.setRs(DBcontrol.user(dto.getArgument()[0]));
 					writer.writeObject(sendDto);
 				} else if(dto.getCommand() == Info.IDCHECK  ) {
 					InfoDTO sendDto = new InfoDTO();

@@ -41,10 +41,13 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 				try{		
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.CONFIRM);
+					String[] argument= {ID,ID_box.getSelectedItem().toString()};
+					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
-					String[] argument= {ID};
-					dto.setArgument(argument);
+					JOptionPane.showMessageDialog(null,"아이디 승인 완료","COMMIT",JOptionPane.PLAIN_MESSAGE);
+					ID_box.removeItem(ID_box.getSelectedItem());
+					ID_box.repaint();
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -80,6 +83,8 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		try {
 			InfoDTO dto = new InfoDTO();
 			dto.setCommand(Info.USER);
+			String[] argument= {ID};
+			dto.setArgument(argument);
 			writer.writeObject(dto);
 			writer.flush();
 			
@@ -96,23 +101,19 @@ public class Admin_Frame extends JFrame implements ActionListener,Runnable{
 		try {
 			InfoDTO dto=(InfoDTO)reader.readObject();
 			while(true) {
-				if(dto.getCommand().equals(Info.CONFIRM)){
-					JOptionPane.showMessageDialog(null,"아이디 승인 완료","COMMIT",JOptionPane.PLAIN_MESSAGE);
-					ID_box.removeItem(ID_box.getSelectedItem());
-					break;
-				}
-				else if(dto.getCommand().equals(Info.USER)) {
+				if(dto.getCommand().equals(Info.USER)) {
 					OracleCachedRowSet rs=dto.getRs();
 					try {
 						while(rs.next()) {
 							ID_box.addItem(rs.getString("아이디"));
+							ID_box.repaint();
 						}
 					}catch (SQLException e) {
 						e.printStackTrace();
 					} finally {
 						if (rs != null)
 							try {
-								rs.close();
+								//rs.close();
 							} catch (Exception e) {}
 					}
 				}
