@@ -141,19 +141,30 @@ public class DBcontrol {
 	// preparedStatement
 	public void busbuy(String busnum, String kindnum, String yearnum, String ID) throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "INSERT INTO 버스 (버스번호,종류,연식,회사) VALUES(?,?,?,?)";
-		String in_sql = "(SELECT 회사이름 FROM 직원 WHERE 아이디 = '" + ID + "')";
+		String sql = "INSERT INTO 버스 (버스번호,종류,연식,회사이름) VALUES(?,?,?,?)";
+		OracleCachedRowSet rs=comcheck(ID);
 		PreparedStatement pstmt = db.conn.prepareStatement(sql);
 		pstmt.setString(1, busnum);
 		pstmt.setString(2, kindnum);
 		pstmt.setString(3, yearnum);
-		pstmt.setString(4, in_sql);
+		if(rs.next()) {
+			pstmt.setString(4,rs.getString("회사이름") );			
+		}
 		pstmt.executeUpdate();
 		db.stmt.close();
 		db.conn.close();
 		pstmt.close();
 	}
-
+	//직원의 회사 이름 SELECT
+	public OracleCachedRowSet comcheck(String ID) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT 회사이름 FROM 직원 WHERE 아이디 ='" + ID + "'";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
+	
 	// callableStatement
 	public void busout(String busnum, String out_time, String pre_in_time) {
 		try {

@@ -21,9 +21,9 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private JComboBox bus_box=new JComboBox();
 	private JButton search_btn=new JButton("조회");
 	private JLabel pre_in_lbl=new JLabel("예정 입차 시간 : ");
-	private JRadioButton sb1=new JRadioButton("A 섹터",true);
-	private JRadioButton sb2=new JRadioButton("B 섹터");
-	private JRadioButton sb3=new JRadioButton("C 섹터");
+	private JRadioButton sb1=new JRadioButton("A",true);
+	private JRadioButton sb2=new JRadioButton("B");
+	private JRadioButton sb3=new JRadioButton("C");
 	private ButtonGroup sbg=new ButtonGroup();
 	private JPanel subpan2=new JPanel();
 	private JButton in_btn=new JButton("입차");
@@ -72,10 +72,17 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		in_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				try{
+					String sec="";
+					if(sb1.isSelected())sec=sb1.getText();
+					else if(sb2.isSelected())sec=sb2.getText();
+					else if(sb3.isSelected())sec=sb3.getText();
 					InfoDTO dto = new InfoDTO();
 					dto.setCommand(Info.BUSIN);
+					String[] argument=new String[] {bus_box.getSelectedItem().toString(),sec,sbox.getSelectedItem().toString()};
+					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
+					JOptionPane.showMessageDialog(null, "입차 성공","Message",JOptionPane.PLAIN_MESSAGE);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
@@ -170,7 +177,6 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 					}
 				}
 				else if(dto.getCommand().equals(Info.BUSIN)) {
-					JOptionPane.showMessageDialog(null, "입차 성공","Message",JOptionPane.PLAIN_MESSAGE);
 				}
 			}catch(IOException e){
 				e.printStackTrace();

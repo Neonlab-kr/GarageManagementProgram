@@ -46,11 +46,12 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 			public void actionPerformed(ActionEvent e){
 				try{
 					InfoDTO dto = new InfoDTO();
-					dto.setCommand(Info.BUSIN);
-					String[]argument=new String[] {bus_tf.getText(),kind_tf.getText(),year_tf.getText()};
+					dto.setCommand(Info.BUSBUY);
+					String[]argument=new String[] {bus_tf.getText(),kind_tf.getText(),year_tf.getText(),ID};
 					dto.setArgument(argument);		
 					writer.writeObject(dto);
 					writer.flush();
+					JOptionPane.showMessageDialog(null, "차량 매입 성공","Message",JOptionPane.PLAIN_MESSAGE);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}catch(NullPointerException npe) {
@@ -96,8 +97,7 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 		while(true){
 			try{
 				dto = (InfoDTO) reader.readObject();
-				if(dto.getCommand()==Info.BUSIN){
-					JOptionPane.showMessageDialog(null, "차량 매입 성공","Message",JOptionPane.PLAIN_MESSAGE);
+				if(dto.getCommand()==Info.BUSBUY){
 				}
 			}catch(IOException e){
 				e.printStackTrace();
