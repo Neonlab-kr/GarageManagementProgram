@@ -37,7 +37,7 @@ public class DBcontrol {
 	public void join(String id, String job, String company, String pw, String name, String address, String age,
 			String phone) throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "INSERT INTO 직원 (아이디, 직책, 회사, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO 직원 (아이디, 직책, 회사이름, 비밀번호, 이름, 주소, 나이, 전화번호) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = db.conn.prepareStatement(sql);
 		pstmt.setString(1, id);
 		pstmt.setString(2, job);

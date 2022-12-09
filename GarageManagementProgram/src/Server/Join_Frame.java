@@ -155,8 +155,6 @@ public class Join_Frame extends JFrame implements ActionListener, Runnable {
 					try {
 						InfoDTO dto = new InfoDTO();
 						dto.setCommand(Info.JOIN);
-						writer.writeObject(dto);
-						writer.flush();
 						String job = "";
 						if (jb1.isSelected())
 							job = jb1.getText();
@@ -173,6 +171,8 @@ public class Join_Frame extends JFrame implements ActionListener, Runnable {
 						String[] argument = new String[] { ID_tf.getText(), job, com, password_tf.getText(),
 								name_tf.getText(), address_tf.getText(), age_tf.getText(), tel_tf.getText() };
 						dto.setArgument(argument);
+						writer.writeObject(dto);
+						writer.flush();
 						JOptionPane.showMessageDialog(null, "가입 승인 요청 완료", "Message", JOptionPane.PLAIN_MESSAGE);
 					} catch (IOException ioe) {
 						ioe.printStackTrace();
