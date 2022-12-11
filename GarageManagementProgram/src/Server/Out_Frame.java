@@ -64,7 +64,7 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 					String pre_in_time = pre_in_hour_box.getSelectedItem().toString() + ":"
 							+ pre_in_minute_box.getSelectedItem().toString();
 					String c_time = new Date().getHours() + ":" + new Date().getMinutes();
-					String[] argument = new String[] {bus_box.getSelectedItem().toString(), pre_in_time, c_time };
+					String[] argument = new String[] { bus_box.getSelectedItem().toString(), pre_in_time, c_time };
 					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
@@ -111,7 +111,7 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 
 		try {
 			InfoDTO dto = new InfoDTO();
-			dto.setCommand(Info.RECORD);
+			dto.setCommand(Info.BUSINFO);
 			writer.writeObject(dto);
 			writer.flush();
 		} catch (IOException ioe) {
@@ -128,13 +128,13 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 		while (true) {
 			try {
 				dto = (InfoDTO) reader.readObject();
-				if (dto.getCommand().equals(Info.RECORD)) {
+				if (dto.getCommand().equals(Info.BUSINFO)) {
 					OracleCachedRowSet rs = dto.getRs();
 					try {
 						while (rs.next()) {
-							if (rs.getString("예정입차시간")==null) {
+							if(rs.getString("버스번호")!=null) {
 								bus_box.addItem(rs.getString("버스번호"));
-								bus_box.repaint();
+								bus_box.repaint();								
 							}
 						}
 					} catch (SQLException e) {
@@ -146,7 +146,7 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 							} catch (Exception e) {
 							}
 					}
-				} else if (dto.getCommand().equals(Info.BUSOUT)) {
+				} else if (dto.getCommand().equals(Info.BUSINFO)) {
 					JOptionPane.showMessageDialog(null, "출차 성공", "Message", JOptionPane.PLAIN_MESSAGE);
 				}
 			} catch (IOException e) {

@@ -52,7 +52,7 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 			public void actionPerformed(ActionEvent e){
 				try{
 					InfoDTO dto = new InfoDTO();
-					dto.setCommand(Info.BUSINFO);
+					dto.setCommand(Info.TEST);
 					writer.writeObject(dto);
 					writer.flush();
 				}catch(IOException io){
@@ -105,7 +105,14 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 
 	public void service(){
 		System.out.println("연결 완료!");
-		
+		try{
+			InfoDTO dto = new InfoDTO();
+			dto.setCommand(Info.BUSINFO);
+			writer.writeObject(dto);
+			writer.flush();
+		}catch(IOException io){
+			io.printStackTrace();
+		}
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -120,6 +127,7 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 					OracleCachedRowSet rs=dto.getRs();
 					try {
 						while(rs.next()) {
+							if(rs.getString("버스번호")!=null)
 							bus_box.addItem(rs.getString("버스번호"));
 						}
 					}catch (SQLException e) {
@@ -130,6 +138,27 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 								rs.close();
 							} catch (Exception e) {}
 					}
+				}
+				else if(dto.getCommand().equals(Info.TEST)) {
+					OracleCachedRowSet rs=dto.getRs();
+					try {
+						while(rs.next()) {
+							if(bus_box.getSelectedItem().equals(rs.getString("버스번호")))
+							{
+								kind_lbl.setText("버스 종류 : "+rs.getString("종류"));
+								year_lbl.setText("버스 연식 : "+rs.getString("연식"));
+								company_lbl.setText("회사 이름 : "+rs.getString("회사이름"));
+							}
+						}
+					}catch (SQLException e) {
+						e.printStackTrace();
+					} finally {
+						if (rs != null)
+							try {
+								rs.close();
+							} catch (Exception e) {}
+					}
+					
 				}
 				else if(dto.getCommand().equals(Info.BUSOUT)) {
 					JOptionPane.showMessageDialog(null, "차량 매도 성공","Message",JOptionPane.PLAIN_MESSAGE);
