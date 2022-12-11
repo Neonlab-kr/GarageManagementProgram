@@ -69,7 +69,6 @@ public class Main_Frame extends JFrame implements ActionListener,Runnable{
 					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
-					new Bus_Frame("Sample").service();
 					setVisible(false);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
