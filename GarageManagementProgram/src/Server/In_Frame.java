@@ -12,6 +12,7 @@ import java.net.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.awt.FlowLayout;
 
 public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private String ID;
@@ -20,7 +21,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private JLabel bus_lbl=new JLabel("버스 번호");
 	private JComboBox bus_box=new JComboBox();
 	private JButton search_btn=new JButton("조회");
-	private JLabel pre_in_lbl=new JLabel("예정 입차 시간 : ");
+	private JLabel pre_in_lbl=new JLabel("\uC608\uC815 \uC785\uCC28 \uC2DC\uAC04 : ");
 	private JRadioButton sb1=new JRadioButton("A",true);
 	private JRadioButton sb2=new JRadioButton("B");
 	private JRadioButton sb3=new JRadioButton("C");
@@ -35,6 +36,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 	private Socket socket;
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
+	private final JPanel panel = new JPanel();
 	
 	public In_Frame(String str) throws UnknownHostException, IOException{
 		this.ID=str;
@@ -47,7 +49,7 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		bus_box.setPreferredSize(new Dimension(150,20));
-		setSize(350,300);
+		setSize(300,300);
 		for (int i=0;i<8;i++) {
 			sbox.addItem(i+1);
 		}
@@ -116,10 +118,15 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 		subpan3.add(sb2);
 		subpan3.add(sb3);
 		subpan3.add(sbox);
-		subpan3.add(pre_in_lbl);
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setHgap(70);
+		flowLayout.setVgap(10);
+		
+		subpan3.add(panel);
+		panel.add(pre_in_lbl);
 		pan.add(subpan3);
 		pan.add(subpan2);
-		add(pan);
+		getContentPane().add(pan);
 		setVisible(true);
 	}
 	public void service(){

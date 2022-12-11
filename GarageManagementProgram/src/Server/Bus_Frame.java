@@ -289,6 +289,7 @@ public class Bus_Frame extends JFrame implements ActionListener, Runnable {
 	@Override
 	public void run() {
 		InfoDTO dto = null;
+		boolean flag = true;
 		while (true) {
 			try {
 				dto = (InfoDTO) reader.readObject();
@@ -325,6 +326,17 @@ public class Bus_Frame extends JFrame implements ActionListener, Runnable {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+			}
+			if(flag) {
+				bus_btn_1.setText(setString(1, garage[0]));
+				bus_btn_2.setText(setString(2, garage[1]));
+				bus_btn_3.setText(setString(3, garage[2]));
+				bus_btn_4.setText(setString(4, garage[3]));
+				bus_btn_5.setText(setString(5, garage[4]));
+				bus_btn_6.setText(setString(6, garage[5]));
+				bus_btn_7.setText(setString(7, garage[6]));
+				bus_btn_8.setText(setString(8, garage[7]));
+				flag=true;
 			}
 		}
 	}
