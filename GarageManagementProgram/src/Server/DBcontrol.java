@@ -89,7 +89,7 @@ public class DBcontrol {
 
 	public OracleCachedRowSet record() throws SQLException {
 		dbConnector db = new dbConnector();
-		String sql = "select 버스번호, 출차시간, 입차시간, 예정입차시간, 비고 from 조회,기록 where 기록.기록번호 = 조회.기록번호";
+		String sql = "select 버스번호, 출차시간, 입차시간, 예정입차시간, 비고 from 조회,기록 where 기록.기록번호 = 조회.기록번호 and 입차시간 is null";
 		OracleCachedRowSet rs = db.executeQuery(sql);
 		db.stmt.close();
 		db.conn.close();
