@@ -52,6 +52,8 @@ public class Buy_Frame extends JFrame implements ActionListener,Runnable{
 					writer.writeObject(dto);
 					writer.flush();
 					JOptionPane.showMessageDialog(null, "차량 매입 성공","Message",JOptionPane.PLAIN_MESSAGE);
+					new Bus_Frame(ID).service();
+					setVisible(false);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}catch(NullPointerException npe) {

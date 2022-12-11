@@ -69,6 +69,9 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
+					JOptionPane.showMessageDialog(null, "차량 매도 성공","Message",JOptionPane.PLAIN_MESSAGE);
+					new Bus_Frame(ID).service();
+					setVisible(false);
 				}catch(IOException io){
 					io.printStackTrace();
 				}
@@ -162,7 +165,6 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 					
 				}
 				else if(dto.getCommand().equals(Info.BUSOUT)) {
-					JOptionPane.showMessageDialog(null, "차량 매도 성공","Message",JOptionPane.PLAIN_MESSAGE);
 				}
 			}catch(IOException e){
 				e.printStackTrace();

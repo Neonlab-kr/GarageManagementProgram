@@ -85,6 +85,8 @@ public class In_Frame extends JFrame implements ActionListener,Runnable{
 					writer.writeObject(dto);
 					writer.flush();
 					JOptionPane.showMessageDialog(null, "입차 성공","Message",JOptionPane.PLAIN_MESSAGE);
+					new Bus_Frame(ID).service();
+					setVisible(false);
 				}catch(IOException ioe){
 					ioe.printStackTrace();
 				}
