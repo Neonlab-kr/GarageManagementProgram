@@ -68,7 +68,7 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 					dto.setArgument(argument);
 					writer.writeObject(dto);
 					writer.flush();
-
+					JOptionPane.showMessageDialog(null, "출차 성공", "Message", JOptionPane.PLAIN_MESSAGE);
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
@@ -147,7 +147,6 @@ public class Out_Frame extends JFrame implements ActionListener, Runnable {
 							}
 					}
 				} else if (dto.getCommand().equals(Info.BUSINFO)) {
-					JOptionPane.showMessageDialog(null, "출차 성공", "Message", JOptionPane.PLAIN_MESSAGE);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

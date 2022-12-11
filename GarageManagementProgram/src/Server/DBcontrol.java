@@ -17,7 +17,14 @@ public class DBcontrol {
 		db.conn.close();
 		return rs;
 	}
-
+	public OracleCachedRowSet sellinfo(String ID) throws SQLException {
+		dbConnector db = new dbConnector();
+		String sql = "SELECT 버스번호, 종류, 연식, 회사이름 FROM 버스 WHERE 회사이름=(SELECT 회사이름 FROM 직원 WHERE 아이디='"+ID+"')";
+		OracleCachedRowSet rs = db.executeQuery(sql);
+		db.stmt.close();
+		db.conn.close();
+		return rs;
+	}
 	public OracleCachedRowSet login(String id, String pw) throws SQLException {
 		dbConnector db = new dbConnector();
 		String sql = "SELECT * FROM 직원 WHERE 아이디 =\'" + id + "\' AND 비밀번호 = \'" + pw + "\'";

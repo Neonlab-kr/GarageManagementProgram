@@ -62,16 +62,16 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 		});
 		sell_btn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				try {
-					new Bus_Frame(ID).service();
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				try{
+					InfoDTO dto = new InfoDTO();
+					dto.setCommand(Info.BUSSELL);
+					String[] argument=new String[] {bus_box.getSelectedItem().toString()};
+					dto.setArgument(argument);
+					writer.writeObject(dto);
+					writer.flush();
+				}catch(IOException io){
+					io.printStackTrace();
 				}
-				setVisible(false);
 			}
 		});
 		back_btn.addActionListener(new ActionListener(){
@@ -107,7 +107,9 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 		System.out.println("연결 완료!");
 		try{
 			InfoDTO dto = new InfoDTO();
-			dto.setCommand(Info.BUSINFO);
+			dto.setCommand(Info.SELLINFO);
+			String[] argument=new String[] {ID};
+			dto.setArgument(argument);
 			writer.writeObject(dto);
 			writer.flush();
 		}catch(IOException io){
@@ -123,11 +125,10 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 		while(true){
 			try{
 				dto = (InfoDTO) reader.readObject();
-				if(dto.getCommand()==Info.BUSINFO){
+				if(dto.getCommand()==Info.SELLINFO){
 					OracleCachedRowSet rs=dto.getRs();
 					try {
 						while(rs.next()) {
-							if(rs.getString("버스번호")!=null)
 							bus_box.addItem(rs.getString("버스번호"));
 						}
 					}catch (SQLException e) {

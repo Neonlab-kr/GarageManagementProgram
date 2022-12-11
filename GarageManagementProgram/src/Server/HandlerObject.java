@@ -90,6 +90,11 @@ class HandlerObject extends Thread {
 					sendDto.setCommand(Info.IDCHECK  );
 					sendDto.setRs(DBcontrol.idcheck(dto.getArgument()[0]));
 					writer.writeObject(sendDto);
+				} else if(dto.getCommand()==Info.SELLINFO) {
+					InfoDTO sendDto=new InfoDTO();
+					sendDto.setCommand(Info.SELLINFO);
+					sendDto.setRs(DBcontrol.sellinfo(dto.getArgument()[0]));
+					writer.writeObject(sendDto);
 				}
 			}
 
