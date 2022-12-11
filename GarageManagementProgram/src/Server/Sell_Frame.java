@@ -28,6 +28,7 @@ public class Sell_Frame extends JFrame implements ActionListener,Runnable{
 	private JButton back_btn=new JButton("뒤로가기");
 	private JPanel search_panel=new JPanel();
 	
+	
 	private Socket socket;
 	private ObjectInputStream reader=null;
 	private ObjectOutputStream writer=null;
